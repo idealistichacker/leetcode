@@ -44,43 +44,40 @@ package leetcode.array.p0904;
  */
 class Solution {
     //1.维护一个treeNums，当treeNums > 2, left = right-1 重新开始滑动
-    int fruitNums = 0, maxNums = -1, left = 0, right = 0, treeNums = 0, firstFruit = -1, secondFruit = -2;
+    int fruitNums = 1, maxNums = -1, left = 0, right = 1, treeNums = 0, firstFruit = -1, secondFruitNow = -2;
 
     public int totalFruit(int[] fruits) {
+
+        if (fruits.length == 1) {return 1;}
+        firstFruit = fruits[0];
+        int secondFruit = firstFruit;
         while (right < fruits.length) {
 
-            if (fruits[right] != firstFruit && treeNums == 0) {
-                firstFruit = fruits[left];
-                treeNums++;
-                right++;
-                fruitNums++;
-            }
-            if (fruits[right] != secondFruit && treeNums == 1) {
-                secondFruit = fruits[right];
-                treeNums++;
-                right++;
-                fruitNums++;
-            }
-
-            if (fruits[right] != firstFruit && fruits[right] != secondFruit) {
-                if (fruitNums > maxNums) {
-                    maxNums = fruitNums;
-                }
-                left = right - 1;
-                fruitNums = 0;
-                treeNums = 0;
-            }
-
-            right++;
+            secondFruitNow = fruits[right++];
+            if (secondFruitNow != firstFruit) {secondFruit = secondFruitNow;}
             fruitNums++;
+            if (fruitNums > maxNums) {
+                maxNums = fruitNums;
+            }
+            if (right < fruits.length && firstFruit != secondFruit) {
+                if (fruits[right] != firstFruit && fruits[right] != secondFruit) {
+//                    if (fruitNums > maxNums) {
+//                        maxNums = fruitNums;
+//                    }
+                    left = right - 1;
+                    firstFruit = fruits[left];
+                    fruitNums = 1;
+                }
+            }
         }
 
         return maxNums == -1 ? fruitNums : maxNums;
     }
 
     public  void main(String[] args) {
-        int[] f = {0, 1, 2, 2};
+        int[] f = {0,1,6,6,4,4,6};
         int a =  totalFruit(f);
+        System.out.println(a);
     }
 
 }
