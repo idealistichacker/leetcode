@@ -60,6 +60,8 @@ class Solution {
         char[] tCharArray = t.toCharArray();
         Map<Character, Integer> tMap = new HashMap<>();
         Map<Character, Integer> sMap = new HashMap<>();
+
+        int minStrLength = 0;
         for (int i = 0; i < t.length(); i++) {
             char tin = tCharArray[i];
             tMap.put(tin, tMap.getOrDefault(tin, 0) + 1);
@@ -73,9 +75,12 @@ class Solution {
 
         for (int right = 0; right < sCharArray.length; right++) {
             char lastChar = sCharArray[right];
-            if (找到一个符合要求的子串（sMapCopy空）[sMapCopy.size() == 0]){
-                把当前的窗口长度和最小值作比较，若小则更新最小值
-               1.去掉最左边第一个符合的字符，直到找到第二个符合要求的字符（缩小窗口）anotherSMap.size() < sMap.size()
+            if (sMapCopy.size() == 0){
+                minStrLength = Math.min(currentMinRecordLength, minStrLength);
+                Map<Character, Integer> anotherTMap = new HashMap<>(tMap);
+               while (anotherTMap.size() == sMap.size()) {
+                   
+               }
                     1.1需要一个值记录left
 
                2.重新开始扩大窗口
