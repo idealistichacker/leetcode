@@ -56,65 +56,87 @@ import java.util.Map;
 class Solution {
     //1.扫描目标串t，用Map记录每个字符出现的顺序
     public String minWindow(String s, String t) {
+        if (s.equals(t)) {
+            return s;
+        }
+
+        if (s.length() < t.length()) {
+            return "";
+        }
+
         char[] sCharArray = s.toCharArray();
         char[] tCharArray = t.toCharArray();
         Map<Character, Integer> tMap = new HashMap<>();
-        Map<Character, Integer> sMap = new HashMap<>();
+        int minRight = -1, minLeft = -1;
+        int minWindowLength = Integer.MAX_VALUE;
 
-        int minStrLength = 0;
         for (int i = 0; i < t.length(); i++) {
             char tin = tCharArray[i];
             tMap.put(tin, tMap.getOrDefault(tin, 0) + 1);
         }
 
-        Map<Character, Integer> sMapCopy = new HashMap<>(tMap);
+        Map<Character, Integer> tMapCopy = new HashMap<>(tMap);
 
-        //记录最小子串
-        char[] minRecord = new char[tCharArray.length];
-        int currentMinRecordLength = 0;
 
         for (int right = 0; right < sCharArray.length; right++) {
             char lastChar = sCharArray[right];
-            if (sMapCopy.size() == 0){
-                minStrLength = Math.min(currentMinRecordLength, minStrLength);
-                Map<Character, Integer> anotherTMap = new HashMap<>(tMap);
-               while (anotherTMap.size() == sMap.size()) {
-                   
-               }
-                    1.1需要一个值记录left
 
-               2.重新开始扩大窗口
-                    2.2重置sMapCopy Map<Character, Integer> sMapCopy = new HashMap<>(tMap);
-            }
-
-            minRecord[right] = sCharArray[right];
-            currentMinRecordLength++;
+            //不需要维护一个数组用来返回值，只要知道最小子串所在窗口的left和right就可以直接截取返回;
 
             //contain肯定不为空
-            if (sMapCopy.containsKey(lastChar)) {
-                int keyValue = sMapCopy.get(lastChar) - 1;
+            if (tMapCopy.containsKey(lastChar)) {
+                int keyValue = tMapCopy.get(lastChar) - 1;
                 if (keyValue == 0) {
-                    sMapCopy.remove(lastChar);
+                    tMapCopy.remove(lastChar);
                 } else {
-                    sMapCopy.put(lastChar, keyValue);
+                    tMapCopy.put(lastChar, keyValue);
                 }
+            }
+            //输入：s = "ADOBECODEBANC", t = "ABC"     "DOBECODEBANC"   "AAADOBECODEBANC" "AABBDFGDFGDFHCSAB"
+            if (tMapCopy.isEmpty()){
+                int backRight = right;
+                Map<Character, Integer> anotherTMapCopy = new HashMap<>(tMap);
+                while (!anotherTMapCopy.isEmpty()) {
+                    char backChar = sCharArray[backRight];
+                    if (anotherTMapCopy.containsKey(backChar)) {
+                        int backValue = anotherTMapCopy.get(backChar) - 1;
+                        if (backValue == 0) {
+                            anotherTMapCopy.remove(backChar);
+                        } else {
+                            anotherTMapCopy.put(backChar, backValue);
+                        }
+                    }
+                    backRight--;
+                }
+
+                if ((right - backRight) <= minWindowLength) {
+                    minWindowLength = right -backRight;
+                    minLeft = backRight + 1;
+                    minRight = right;
+                }
+                tMapCopy.put(sCharArray[backRight+1],1);
             }
         }
 
+        System.out.println(minLeft + " " + (minRight + 1));
+        if (minLeft == -1 && minRight == -1) {
+            return "";
+        }
 //        tMap.put(tCharArray[0], 999);
-//        for (Map.Entry<Character, Integer> entry : sMapCopy.entrySet()) {
+//        for (Map.Entry<Character, Integer> entry : tMapCopy.entrySet()) {
 //            Character key = entry.getKey();
 //            Integer value = entry.getValue();
 //            System.out.println(key + ":" + value);
 //        }
 //        System.out.println(tMap.get(tCharArray[0]));
-        return "god damn";
+        return s.substring(minLeft, minRight+1);
     }
 
 
     public  void main(String[] args) {
-        String s = "abcabc";
-        String t = "abc";
-        minWindow(s, t);
+        //s = "ab" t = "a"; s = "a" t = "b";
+        String s = "b";
+        String t = "a";
+        System.out.println(minWindow(s, t));
     }
 }
