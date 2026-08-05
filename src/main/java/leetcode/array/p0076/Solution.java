@@ -79,12 +79,12 @@ class Solution {
                 minStrLength = Math.min(currentMinRecordLength, minStrLength);
                 Map<Character, Integer> anotherTMap = new HashMap<>(tMap);
                while (anotherTMap.size() == sMap.size()) {
-                   
-               }
-                    1.1需要一个值记录left
 
-               2.重新开始扩大窗口
-                    2.2重置sMapCopy Map<Character, Integer> sMapCopy = new HashMap<>(tMap);
+               }
+//                    1.1需要一个值记录left
+//
+//               2.重新开始扩大窗口
+//                    2.2重置sMapCopy Map<Character, Integer> sMapCopy = new HashMap<>(tMap);
             }
 
             minRecord[right] = sCharArray[right];
