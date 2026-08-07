@@ -89,45 +89,49 @@ class Solution {
 //    }
 
     public List<List<Integer>> threeSum(int[] nums) {
-        Arrays.sort(nums);
-        int fix = 0;
         List<List<Integer>> res = new ArrayList<>();
-        while (fix < nums.length - 2 && nums[fix] < 0){
-            //跳过左侧重复元素
-            while (fix < nums.length - 4 && nums[fix] == nums[fix+1]) {
-                fix++;
+        Arrays.sort(nums);
+        //[ -100, -70, -60, 110, 120, 130, 160 ]
+        //[-4,-1-1,0,1,2]
+        //[0,0,0,0,0,1,1,2]
+        for (int fix = 0; fix < nums.length - 2; fix++) {
+            if(nums[0] + nums[1] + nums[2] > 0) {
+                return res;
             }
-            int target = -nums[fix];
+
+            if(nums[fix] + nums[nums.length-2] + nums[nums.length-1] < 0) {
+                continue;
+            }
+
+
+            if (fix > 0  &&  nums[fix] == nums[fix - 1]) {
+                continue;
+            }
+
             int left = fix + 1;
             int right = nums.length - 1;
-            while (left < right) {
-                int sum = nums[fix] + nums[left] + nums[right];
+            int target = -nums[fix];
 
-                if (sum < 0) {
+            while(left < right) {
+                int twoSum = nums[left] + nums[right];
+                if (twoSum < target) {
                     left++;
-                } else if (sum > 0) {
+                }
+                else if (twoSum > target) {
                     right--;
-                } else {
-                    res.add(Arrays.asList(
-                            nums[fix],
-                            nums[left],
-                            nums[right]
-                    ));
+                }
+                else if (twoSum == target) {
+                    res.add(Arrays.asList(nums[fix], nums[left], nums[right]));
+                    left++;right--;
 
-                    int leftValue = nums[left];
-                    int rightValue = nums[right];
-
-                    // 跳过本次答案中已经使用过的值
-                    while (left < right && nums[left] == leftValue) {
+                    while (left < right && nums[left] == nums[left-1]) {
                         left++;
                     }
-
-                    while (left < right && nums[right] == rightValue) {
+                    while (left < right && nums[right] == nums[right+1]) {
                         right--;
                     }
                 }
             }
-            fix++;
         }
         return res;
     }
@@ -189,7 +193,7 @@ class Solution {
     }
 
     public void main(String[] args) {
-        int[] input = {-100,-70,-60,110,120,130,160};
+        int[] input = {1,2,0,1,0,0,0,0};
         //[ -100, -70, -60, 110, 120, 130, 160 ]
         //[-4,-1-1,0,1,2]
         threeSum(input);
